@@ -1,0 +1,6 @@
+<resources>
+  <string name="app_name">BitCoinTracker</string>
+  <string name="logo">Crypto Currency Logo</string>
+  <string name="check">CheckBox</string>
+  <string name="refresh">Refresh</string>
+</resources>
