@@ -114,10 +114,6 @@ public class JsonParser {
 //    mRealm.commitTransaction();
 //  }
 
-//  private void writeToSharedPreferences(){
-//
-//  }
-
   /**
    *  write JSON data to file for offline access to data
    */
