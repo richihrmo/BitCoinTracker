@@ -14,6 +14,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import com.developers.team100k.bitcointracker.adapter.ListViewAdapter;
 import com.developers.team100k.bitcointracker.jsonData.Currency;
 import com.developers.team100k.bitcointracker.jsonData.JsonParser;
@@ -46,54 +47,42 @@ public class MainActivity extends AppCompatActivity {
     toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
     listView = findViewById(R.id.list_view);
-    listView.setOnItemClickListener(new OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        if (listView.isClickable()){
-          if (view.isSelected()) {
-            view.setSelected(false);
-          }
-          else view.setSelected(true);
-          jsonParser.addWantedCurrency(currencies.get(i));
-          adapter.notifyDataSetChanged();
+    listView.setOnItemClickListener((adapterView, view, i, l) -> {
+      if (listView.isClickable()){
+        if (view.isSelected()) {
+          view.setSelected(false);
         }
+        else view.setSelected(true);
+        jsonParser.addWantedCurrency(currencies.get(i));
+        adapter.notifyDataSetChanged();
       }
     });
 
     button = findViewById(R.id.action_button);
-    button.setOnClickListener(new OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        if (i % 2 == 0){
-          listView.setClickable(true);
-          button.setImageResource(R.drawable.check);
-          listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-          adapter.setList(jsonParser.getCurrency());
-//          listView.setAdapter(adapter);
-          adapter.notifyDataSetChanged();
-          i++;
-        } else {
-          listView.setClickable(false);
-          button.setImageResource(R.drawable.edit);
-          listView.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
-          adapter.setList(jsonParser.getCurrencyWanted());
-//          listView.setAdapter(adapter);
-          adapter.notifyDataSetChanged();
-          i++;
-        }
+    button.setOnClickListener(view -> {
+      if (i % 2 == 0){
+        listView.setClickable(true);
+        button.setImageResource(R.drawable.check);
+        listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        adapter.setList(jsonParser.getCurrency());
+        adapter.notifyDataSetChanged();
+        i++;
+      } else {
+        listView.setClickable(false);
+        button.setImageResource(R.drawable.edit);
+        listView.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
+        adapter.setList(jsonParser.getCurrencyWanted());
+        adapter.notifyDataSetChanged();
+        i++;
       }
     });
 
     jsonParser = new JsonParser(this);
 
-    Runnable runnable = new Runnable() {
-      @Override
-      public void run() {
-        currencies = jsonParser.getCurrency();
-//        adapter = new ListViewAdapter(MainActivity.this, jsonParser.getCurrencyWanted());
-        adapter = new ListViewAdapter(MainActivity.this, jsonParser.getCurrency());
-        listView.setAdapter(adapter);
-      }
+    Runnable runnable = () -> {
+      currencies = jsonParser.getCurrency();
+      adapter = new ListViewAdapter(MainActivity.this, jsonParser.getCurrencyWanted());
+      listView.setAdapter(adapter);
     };
     new Handler().postDelayed(runnable, 1000);
   }
@@ -118,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
+  public boolean onCreateOptionsMenu(Menu menu) { 
     MenuInflater menuInflater = getMenuInflater();
     menuInflater.inflate(R.menu.main_menu, menu);
     return true;
