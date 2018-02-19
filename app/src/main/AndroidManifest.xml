@@ -31,9 +31,6 @@
         android:resource="@xml/bit_widget_info" />
     </receiver>
 
-    <service
-      android:name=".widget.LivePriceWidgetService"
-      android:permission= "android.permission.BIND_REMOTEVIEWS" />
   </application>
 
 </manifest>

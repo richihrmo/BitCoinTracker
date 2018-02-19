@@ -1,5 +1,7 @@
 package com.developers.team100k.bitcointracker.jsonData;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -27,6 +29,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.stream.Collectors;
 
 /**
@@ -50,12 +54,17 @@ public class JsonParser {
 
   public JsonParser(Context context){
     this.mContext = context;
-    jsonFromURL();
+    new Timer().schedule(new TimerTask() {
+      @Override
+      public void run() {
+        jsonFromURL();
+      }
+    }, 0 , 60000);
   }
 
   /**
    * Convert JSON data to Java Collection using GSON
-   * @param json
+   * @param json json
    */
   private void jsonToCollection(String json){
     Type type = new TypeToken<List<Currency>>(){}.getType();
@@ -82,21 +91,13 @@ public class JsonParser {
     Log.e("RANDOM", "jsonFromURL call");
     if (isOnline()){
       if (queue == null) queue = Volley.newRequestQueue(mContext);
-      StringRequest stringRequest = new StringRequest(url, new Listener<String>() {
-        @Override
-        public void onResponse(String response) {
-          Log.e("RANDOM", "response from server");
-          json = response;
-          jsonToCollection(json);
-          writeToFile(mContext);
-//          updateWidget();
-        }
-      }, new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-          Toast.makeText(mContext, "Could not reach server", Toast.LENGTH_SHORT).show();
-        }
-      });
+      StringRequest stringRequest = new StringRequest(url, response -> {
+        Log.e("RANDOM", "response from server");
+        json = response;
+        jsonToCollection(json);
+        writeToFile(mContext);
+        updateWidget(mCurrency.get(0));
+      }, error -> Toast.makeText(mContext, "Could not reach server", Toast.LENGTH_SHORT).show());
       queue.add(stringRequest);
     } else {
       Log.e("RANDOM", "not online");
@@ -111,6 +112,10 @@ public class JsonParser {
 //    mRealm.beginTransaction();
 //    mRealm.copyToRealm(mCurrency);
 //    mRealm.commitTransaction();
+//  }
+
+//  private void writeToSharedPreferences(){
+//
 //  }
 
   /**
@@ -170,14 +175,15 @@ public class JsonParser {
     return netInfo != null && netInfo.isConnectedOrConnecting();
   }
 
-  private void updateWidget(){
+  private void updateWidget(Currency currency){
     Intent intent = new Intent(mContext, LivePriceWidget.class);
     intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 // Use an array and EXTRA_APPWIDGET_IDS instead of AppWidgetManager.EXTRA_APPWIDGET_ID,
 // since it seems the onUpdate() is only fired on that:
     int[] ids = AppWidgetManager.getInstance(mContext).getAppWidgetIds(new ComponentName(mContext, LivePriceWidget.class));
     intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-    intent.putExtra("isOk", true);
+    intent.putExtra("name", currency.getName());
+    intent.putExtra("value", currency.getPrice_usd());
     mContext.sendBroadcast(intent);
   }
 
