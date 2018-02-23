@@ -75,6 +75,18 @@ public class Currency extends RealmObject{
     return symbol;
   }
 
+  public String getPercent_change_1h() {
+    return percent_change_1h;
+  }
+
+  public String getPercent_change_24h() {
+    return percent_change_24h;
+  }
+
+  public String getPercent_change_7d() {
+    return percent_change_7d;
+  }
+
   public boolean isSelected() {
     return selected;
   }

@@ -49,6 +49,8 @@ public class JsonParser {
 
   private List<Currency> mCurrency = new ArrayList<>();
   private List<Currency> mCurrencyWanted = new ArrayList<>();
+  private List<String> mCurrencyName = new ArrayList<>();
+  private List<String> mCurrencyValue = new ArrayList<>();
   private RequestQueue queue;
 //  private Realm mRealm = Realm.getDefaultInstance();
 
@@ -96,7 +98,8 @@ public class JsonParser {
         json = response;
         jsonToCollection(json);
         writeToFile(mContext);
-        updateWidget(mCurrency.get(0));
+        setNameAndValue();
+        updateWidget();
       }, error -> Toast.makeText(mContext, "Could not reach server", Toast.LENGTH_SHORT).show());
       queue.add(stringRequest);
     } else {
@@ -105,6 +108,13 @@ public class JsonParser {
         json = readFile(mContext, filename);
         jsonToCollection(json);
       }
+    }
+  }
+
+  public void setNameAndValue(){
+    for (Currency currency:mCurrency) {
+      mCurrencyName.add(currency.getName());
+      mCurrencyValue.add(currency.getPrice_usd());
     }
   }
 
@@ -171,15 +181,21 @@ public class JsonParser {
     return netInfo != null && netInfo.isConnectedOrConnecting();
   }
 
-  private void updateWidget(Currency currency){
+  private void updateWidget(){
     Intent intent = new Intent(mContext, LivePriceWidget.class);
     intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 // Use an array and EXTRA_APPWIDGET_IDS instead of AppWidgetManager.EXTRA_APPWIDGET_ID,
 // since it seems the onUpdate() is only fired on that:
     int[] ids = AppWidgetManager.getInstance(mContext).getAppWidgetIds(new ComponentName(mContext, LivePriceWidget.class));
     intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+
+    Currency currency = mCurrency.get(16);
     intent.putExtra("name", currency.getName());
+    intent.putExtra("name_more", mCurrencyName.toArray());
     intent.putExtra("value", currency.getPrice_usd());
+    intent.putExtra("change1h", currency.getPercent_change_1h());
+    intent.putExtra("change24h", currency.getPercent_change_24h());
+    intent.putExtra("change7d", currency.getPercent_change_7d());
     mContext.sendBroadcast(intent);
   }
 
