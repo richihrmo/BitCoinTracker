@@ -6,9 +6,72 @@
 
   <ImageView
     android:id="@+id/background"
-    android:src="@color/colorPrimary"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+    android:layout_height="match_parent"
+    android:src="@color/colorPrimary"/>
+
+  <ImageView
+    android:id="@+id/image1h"
+    android:layout_width="24dp"
+    android:layout_height="24dp"
+    android:paddingTop="8dp"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentEnd="true"
+    android:src="@drawable/up"/>
+
+  <TextView
+    android:id="@+id/text1h"
+    android:text="@string/check"
+    android:textAlignment="viewStart"
+    android:paddingTop="8dp"
+    android:paddingEnd="8dp"
+    android:paddingStart="8dp"
+    android:layout_width="110dp"
+    android:layout_height="24dp"
+    android:layout_alignParentTop="true"
+    android:layout_toStartOf="@id/image1h"/>
+
+  <ImageView
+    android:id="@+id/image24h"
+    android:layout_width="24dp"
+    android:layout_height="24dp"
+    android:paddingTop="7dp"
+    android:layout_alignParentEnd="true"
+    android:layout_below="@id/image1h"
+    android:src="@drawable/up"/>
+
+  <TextView
+    android:id="@+id/text24h"
+    android:text="@string/check"
+    android:textAlignment="viewStart"
+    android:paddingTop="8dp"
+    android:paddingEnd="8dp"
+    android:paddingStart="8dp"
+    android:layout_width="110dp"
+    android:layout_height="24dp"
+    android:layout_below="@id/text1h"
+    android:layout_toStartOf="@id/image24h"/>
+
+  <ImageView
+    android:id="@+id/image7d"
+    android:layout_width="24dp"
+    android:layout_height="24dp"
+    android:paddingTop="6dp"
+    android:layout_alignParentEnd="true"
+    android:layout_below="@id/image24h"
+    android:src="@drawable/up"/>
+
+  <TextView
+    android:id="@+id/text7d"
+    android:text="@string/check"
+    android:textAlignment="viewStart"
+    android:paddingTop="8dp"
+    android:paddingEnd="8dp"
+    android:paddingStart="8dp"
+    android:layout_width="110dp"
+    android:layout_height="24dp"
+    android:layout_below="@id/text24h"
+    android:layout_toStartOf="@id/image7d"/>
 
   <TextView
     android:id="@+id/currency_name"
@@ -33,14 +96,5 @@
     android:layout_height="wrap_content"
     android:layout_alignParentStart="true"
     android:layout_below="@+id/currency_name"/>
-
-  <ImageButton
-    android:id="@+id/refresh_button"
-    android:src="@drawable/refresh"
-    android:padding="8dp"
-    android:background="@color/colorPrimary"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentEnd="true"/>
 
 </RelativeLayout>

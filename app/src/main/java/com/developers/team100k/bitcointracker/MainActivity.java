@@ -24,6 +24,10 @@ import java.util.List;
  * Created by Richard Hrmo.
  */
 
+// TODO show trends, show percentage,
+// TODO refresh widget every minute( using AlarmManager, not through program )
+// TODO settings of which currency to show
+
 public class MainActivity extends AppCompatActivity {
 
   private JsonParser jsonParser;
